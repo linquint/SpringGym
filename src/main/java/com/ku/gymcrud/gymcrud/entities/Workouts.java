@@ -2,11 +2,12 @@ package com.ku.gymcrud.gymcrud.entities;
 
 import jakarta.persistence.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @Entity
-@Table(name="clients")
-public class Client {
+@Table(name="workouts")
+public class Workouts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -14,16 +15,16 @@ public class Client {
     @Column
     private String name;
 
-    @Column
-    private String surname;
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
     @Column
-    private String email;
+    private Integer places;
 
-    @Column
-    private String phone;
+    @Column(columnDefinition = "TEXT")
+    private String location;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "workout")
     private List<Registration> registrations;
 
     public List<Registration> getRegistrations() {
@@ -34,14 +35,14 @@ public class Client {
         this.registrations = registrations;
     }
 
-    public Client() {
+    public Workouts() {
     }
 
-    public Client(String name, String surname, String email, String phone) {
+    public Workouts(String name, Date date, Integer places, String location) {
         this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.phone = phone;
+        this.date = date;
+        this.places = places;
+        this.location = location;
     }
 
     public Integer getId() {
@@ -60,27 +61,27 @@ public class Client {
         this.name = name;
     }
 
-    public String getSurname() {
-        return surname;
+    public Date getDate() {
+        return date;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public String getEmail() {
-        return email;
+    public Integer getPlaces() {
+        return places;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPlaces(Integer places) {
+        this.places = places;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getLocation() {
+        return location;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
