@@ -13,25 +13,29 @@
       <a href="/" class="btn btn-danger">Atšaukti</a>
     </div>
 
-    <form method="post" action="/new">
+    <form method="post" action="/new" th:object="${client}">
       <div class="mb-3">
         <label for="name" class="form-label">Vardas</label>
-        <input type="text" id="name" name="name" class="form-control">
+        <input type="text" id="name" name="name" class="form-control" th:field="*{name}">
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
       </div>
 
       <div class="mb-3">
         <label for="surname" class="form-label">Pavardė</label>
-        <input type="text" id="surname" name="surname" class="form-control">
+        <input type="text" id="surname" name="surname" class="form-control" th:field="*{surname}">
+        <span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}" class="text-danger"></span>
       </div>
 
       <div class="mb-3">
         <label for="email" class="form-label">El. Paštas</label>
-        <input type="email" id="email" name="email" class="form-control">
+        <input type="email" id="email" name="email" class="form-control" th:field="*{email}">
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
       </div>
 
       <div class="mb-3">
         <label for="phone" class="form-label">Tel. Nr.</label>
-        <input type="text" id="phone" name="phone" class="form-control">
+        <input type="text" id="phone" name="phone" class="form-control" th:field="*{phone}">
+        <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="text-danger"></span>
       </div>
 
       <button type="submit" class="btn btn-primary">Pridėti</button>

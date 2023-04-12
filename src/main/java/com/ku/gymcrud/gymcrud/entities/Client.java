@@ -1,6 +1,9 @@
 package com.ku.gymcrud.gymcrud.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -12,15 +15,22 @@ public class Client {
     private Integer id;
 
     @Column
+    @NotBlank(message = "Laukelis negali būti tuščias.")
+    @Size(min = 3, max = 20, message = "Vardas turi būti sudarytas iš bent 3 simbolių, bet nedaugiau, kaip 20.")
     private String name;
 
     @Column
+    @NotBlank(message = "Laukelis negali būti tuščia.")
+    @Size(min = 3, max = 25, message = "Pavardė turi būti sudaryta iš bent 3 simbolių, bet nedaugiau, kaip 25.")
     private String surname;
 
     @Column
+    @NotBlank(message = "Laukelis negali būti tuščias.")
+    @Email(message = "Įvestas netinkamas el. pašto adresas")
     private String email;
 
     @Column
+    @Size(max = 15, message = "Telefono numeris gali būti sudarytas iš ne daugiau, kaip 15 simbolių.")
     private String phone;
 
     @OneToMany(mappedBy = "client")

@@ -4,16 +4,22 @@ import com.ku.gymcrud.gymcrud.entities.Client;
 import com.ku.gymcrud.gymcrud.entities.Registration;
 import com.ku.gymcrud.gymcrud.repositories.GymRepository;
 import com.ku.gymcrud.gymcrud.repositories.RegistrationRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Controller
+@Validated
 public class ClientController {
     @Autowired
     public GymRepository gymRepository;
@@ -30,19 +36,20 @@ public class ClientController {
 
     @GetMapping("/new")
     public String addClientGet(Model model) {
+        model.addAttribute("client", new Client());
         return "client_new";
     }
 
     @PostMapping("/new")
     public String addClient(
-            Model model,
-            @RequestParam("name") String name,
-            @RequestParam("surname") String surname,
-            @RequestParam("email") String email,
-            @RequestParam("phone") String phone
+            @Validated @ModelAttribute("client") Client client,
+            BindingResult result
     ) {
-        Client client = new Client(name, surname, email, phone);
-        gymRepository.save(client);
+        if (result.hasErrors()) {
+            return "client_new";
+        }
+        Client new_client = new Client(client.getName(), client.getSurname(), client.getEmail(), client.getPhone());
+        gymRepository.save(new_client);
         return "redirect:/";
     }
 
@@ -60,18 +67,20 @@ public class ClientController {
     public String updateClientPost(
             Model model,
             @PathVariable("id") Integer id,
-            @RequestParam("name") String name,
-            @RequestParam("surname") String surname,
-            @RequestParam("email") String email,
-            @RequestParam("phone") String phone
+            @Validated @ModelAttribute("client") Client client,
+            BindingResult result
     ) {
-        Client client = gymRepository.getReferenceById(id);
-        client.setName(name);
-        client.setSurname(surname);
-        client.setEmail(email);
-        client.setPhone(phone);
-        gymRepository.save(client);
-        return "redirect:/";
+        if (result.hasErrors()) {
+            return "client_update";
+        } else {
+            Client client_update = gymRepository.getReferenceById(id);
+            client_update.setName(client.getName());
+            client_update.setSurname(client.getSurname());
+            client_update.setEmail(client.getEmail());
+            client_update.setPhone(client.getPhone());
+            gymRepository.save(client_update);
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/delete/{id}")
