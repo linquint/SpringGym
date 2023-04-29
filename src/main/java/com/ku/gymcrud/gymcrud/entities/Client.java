@@ -4,93 +4,106 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
 @Entity
-@Table(name="clients")
+@Table(name = "clients")
 public class Client {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @Column
-    @NotBlank(message = "Laukelis negali būti tuščias.")
-    @Size(min = 3, max = 20, message = "Vardas turi būti sudarytas iš bent 3 simbolių, bet nedaugiau, kaip 20.")
-    private String name;
+  @Column
+  @NotBlank(message = "Laukelis negali būti tuščias.")
+  @Size(min = 3, max = 20, message = "Vardas turi būti sudarytas iš bent 3 simbolių, bet nedaugiau, kaip 20.")
+  private String name;
 
-    @Column
-    @NotBlank(message = "Laukelis negali būti tuščia.")
-    @Size(min = 3, max = 25, message = "Pavardė turi būti sudaryta iš bent 3 simbolių, bet nedaugiau, kaip 25.")
-    private String surname;
+  @Column
+  @NotBlank(message = "Laukelis negali būti tuščia.")
+  @Size(min = 3, max = 25, message = "Pavardė turi būti sudaryta iš bent 3 simbolių, bet nedaugiau, kaip 25.")
+  private String surname;
 
-    @Column
-    @NotBlank(message = "Laukelis negali būti tuščias.")
-    @Email(message = "Įvestas netinkamas el. pašto adresas")
-    private String email;
+  @Column
+  @NotBlank(message = "Laukelis negali būti tuščias.")
+  @Email(message = "Įvestas netinkamas el. pašto adresas")
+  private String email;
 
-    @Column
-    @Size(max = 15, message = "Telefono numeris gali būti sudarytas iš ne daugiau, kaip 15 simbolių.")
-    private String phone;
+  @Column
+  @Size(max = 15, message = "Telefono numeris gali būti sudarytas iš ne daugiau, kaip 15 simbolių.")
+  private String phone;
 
-    @OneToMany(mappedBy = "client")
-    private List<Registration> registrations;
+  @Column(length = 128)
+  @Value("${agreement:null}")
+  private String agreement = null;
 
-    public List<Registration> getRegistrations() {
-        return registrations;
-    }
+  @OneToMany(mappedBy = "client")
+  private List<Registration> registrations;
 
-    public void setRegistrations(List<Registration> registrations) {
-        this.registrations = registrations;
-    }
+  public List<Registration> getRegistrations() {
+    return registrations;
+  }
 
-    public Client() {
-    }
+  public void setRegistrations(List<Registration> registrations) {
+    this.registrations = registrations;
+  }
 
-    public Client(String name, String surname, String email, String phone) {
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.phone = phone;
-    }
+  public Client() {
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public Client(String name, String surname, String email, String phone) {
+    this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.phone = phone;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getSurname() {
-        return surname;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+  public String getSurname() {
+    return surname;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public void setSurname(String surname) {
+    this.surname = surname;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getAgreement() {
+    return agreement;
+  }
+
+  public void setAgreement(String agreement) {
+    this.agreement = agreement;
+  }
 }

@@ -3,7 +3,7 @@ package com.ku.gymcrud.gymcrud.controllers;
 import com.ku.gymcrud.gymcrud.entities.Client;
 import com.ku.gymcrud.gymcrud.entities.Registration;
 import com.ku.gymcrud.gymcrud.entities.Workouts;
-import com.ku.gymcrud.gymcrud.repositories.GymRepository;
+import com.ku.gymcrud.gymcrud.repositories.ClientRepository;
 import com.ku.gymcrud.gymcrud.repositories.RegistrationRepository;
 import com.ku.gymcrud.gymcrud.repositories.WorkoutsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class RegistrationsController {
     public RegistrationRepository registrationRepository;
 
     @Autowired
-    public GymRepository clientRepository;
+    public ClientRepository clientRepository;
 
     @Autowired
     public WorkoutsRepository workoutsRepository;
