@@ -19,59 +19,59 @@ import java.util.List;
 
 @Controller
 public class RegistrationsController {
-    @Autowired
-    public RegistrationRepository registrationRepository;
+  @Autowired
+  public RegistrationRepository registrationRepository;
 
-    @Autowired
-    public ClientRepository clientRepository;
+  @Autowired
+  public ClientRepository clientRepository;
 
-    @Autowired
-    public WorkoutsRepository workoutsRepository;
+  @Autowired
+  public WorkoutsRepository workoutsRepository;
 
-    @GetMapping("/registrations/{id}")
-    public String clientRegistrations(
-            Model model,
-            @PathVariable("id") Integer id
-    ) {
-        Workouts workout = workoutsRepository.getReferenceById(id);
-        List<Client> clients = clientRepository.findAll();
-        List<Integer> registeredIds = new ArrayList<>();
-        List<Client> availableClients = new ArrayList<>();
+  @GetMapping("/registrations/{id}")
+  public String clientRegistrations(
+          Model model,
+          @PathVariable("id") Integer id
+  ) {
+    Workouts workout = workoutsRepository.getReferenceById(id);
+    List<Client> clients = clientRepository.findAll();
+    List<Integer> registeredIds = new ArrayList<>();
+    List<Client> availableClients = new ArrayList<>();
 
-        for (Registration r:workout.getRegistrations()) {
-            registeredIds.add(r.getClient().getId());
-        }
-        for (Client c:clients) {
-            if (!registeredIds.contains(c.getId())) {
-                availableClients.add(c);
-            }
-        }
-
-        model.addAttribute("workout", workout);
-        model.addAttribute("clients", availableClients);
-        return "registrations";
+    for (Registration r:workout.getRegistrations()) {
+      registeredIds.add(r.getClient().getId());
+    }
+    for (Client c:clients) {
+      if (!registeredIds.contains(c.getId())) {
+        availableClients.add(c);
+      }
     }
 
-    @PostMapping("/registrations/{id}/add")
-    public String addRegistration(
-            Model model,
-            @PathVariable("id") Integer id,
-            @RequestParam("client_id") Integer client_id
-    ) {
-        Client client = clientRepository.getReferenceById(client_id);
-        Workouts workout = workoutsRepository.getReferenceById(id);
-        Registration registration = new Registration(client, workout);
-        registrationRepository.save(registration);
-        return "redirect:/registrations/{id}";
-    }
+    model.addAttribute("workout", workout);
+    model.addAttribute("clients", availableClients);
+    return "registrations";
+  }
 
-    @GetMapping("/registrations/{workout_id}/delete/{registration_id}")
-    public String deleteRegistration(
-            Model model,
-            @PathVariable("workout_id") Integer id,
-            @PathVariable("registration_id") Integer reg_id
-    ) {
-        registrationRepository.deleteById(reg_id);
-        return "redirect:/registrations/{workout_id}";
-    }
+  @PostMapping("/registrations/{id}/add")
+  public String addRegistration(
+          Model model,
+          @PathVariable("id") Integer id,
+          @RequestParam("client_id") Integer client_id
+  ) {
+    Client client = clientRepository.getReferenceById(client_id);
+    Workouts workout = workoutsRepository.getReferenceById(id);
+    Registration registration = new Registration(client, workout);
+    registrationRepository.save(registration);
+    return "redirect:/registrations/{id}";
+  }
+
+  @GetMapping("/registrations/{workout_id}/delete/{registration_id}")
+  public String deleteRegistration(
+          Model model,
+          @PathVariable("workout_id") Integer id,
+          @PathVariable("registration_id") Integer reg_id
+  ) {
+    registrationRepository.deleteById(reg_id);
+    return "redirect:/registrations/{workout_id}";
+  }
 }

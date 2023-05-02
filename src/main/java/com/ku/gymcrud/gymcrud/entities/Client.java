@@ -5,27 +5,41 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Entity
 @Table(name = "clients")
-public class Client {
+public class Client implements UserDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column
+  @Column(nullable = false, unique = true)
+  private String username;
+
+  @Column(nullable = false)
+  private String password;
+
+  @Column(nullable = false)
+  private String type = "client";
+
+  @Column(nullable = false)
   @NotBlank(message = "Laukelis negali būti tuščias.")
   @Size(min = 3, max = 20, message = "Vardas turi būti sudarytas iš bent 3 simbolių, bet nedaugiau, kaip 20.")
   private String name;
 
-  @Column
+  @Column(nullable = false)
   @NotBlank(message = "Laukelis negali būti tuščia.")
   @Size(min = 3, max = 25, message = "Pavardė turi būti sudaryta iš bent 3 simbolių, bet nedaugiau, kaip 25.")
   private String surname;
 
-  @Column
+  @Column(nullable = false)
   @NotBlank(message = "Laukelis negali būti tuščias.")
   @Email(message = "Įvestas netinkamas el. pašto adresas")
   private String email;
@@ -52,7 +66,23 @@ public class Client {
   public Client() {
   }
 
+  public Client(String username, String password, String type) {
+    this.username = username;
+    this.password = password;
+    this.type = type;
+  }
+
   public Client(String name, String surname, String email, String phone) {
+    this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.phone = phone;
+  }
+
+  public Client(String username, String password, String type, String name, String surname, String email, String phone) {
+    this.username = username;
+    this.password = password;
+    this.type = type;
     this.name = name;
     this.surname = surname;
     this.email = email;
@@ -105,5 +135,42 @@ public class Client {
 
   public void setAgreement(String agreement) {
     this.agreement = agreement;
+  }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    HashSet<GrantedAuthority> authorities = new HashSet<>();
+    authorities.add(new SimpleGrantedAuthority(this.type));
+    return authorities;
+  }
+
+  @Override
+  public String getPassword() {
+    return password;
+  }
+
+  @Override
+  public String getUsername() {
+    return username;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
   }
 }

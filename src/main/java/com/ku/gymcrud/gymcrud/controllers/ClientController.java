@@ -5,17 +5,20 @@ import com.ku.gymcrud.gymcrud.entities.Registration;
 import com.ku.gymcrud.gymcrud.repositories.ClientRepository;
 import com.ku.gymcrud.gymcrud.repositories.RegistrationRepository;
 import com.ku.gymcrud.gymcrud.services.FileStorageService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @Controller
@@ -72,6 +75,20 @@ public class ClientController {
             .ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + client.getAgreement() + "\"")
             .body(resource);
+  }
+
+  @GetMapping("/login")
+  public String login(HttpServletRequest request, Model model) {
+    HttpSession session = request.getSession(false);
+    String errorMessage = null;
+    if (session != null) {
+      AuthenticationException ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+      if (ex != null) {
+        errorMessage = ex.getMessage();
+      }
+    }
+    model.addAttribute("errorMessage", errorMessage);
+    return "login";
   }
 
   @GetMapping("/update/{id}")

@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
-    <nav th:fragment="nav" class="navbar navbar-light" style="background: #7fff7f77">
-        <div class="container justify-content-start">
-            <a href="/" class="btn btn-outline-success me-2" type="button">Klientai</a>
-            <a href="/workouts" class="btn btn-outline-success me-2" type="button">Treniruotės</a>
-        </div>
-    </nav>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<nav th:fragment="nav" class="navbar navbar-light" style="background: #7fff7f77">
+  <div class="container d-flex justify-items-between">
+    <div class="gap-1">
+      <a href="/" class="btn btn-outline-success me-2" type="button">Klientai</a>
+      <a href="/workouts" class="btn btn-outline-success me-2" type="button">Treniruotės</a>
+    </div>
+
+    <div sec:authorize="isAuthenticated()">
+      <a class="btn btn-warning" href="/logout">Atsijungti</a>
+    </div>
+  </div>
+</nav>
 </html>
