@@ -7,11 +7,13 @@ import com.ku.gymcrud.gymcrud.repositories.RegistrationRepository;
 import com.ku.gymcrud.gymcrud.services.FileStorageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,7 +57,8 @@ public class ClientController {
     if (result.hasErrors()) {
       return "client_new";
     }
-    Client new_client = new Client(client.getName(), client.getSurname(), client.getEmail(), client.getPhone());
+    String pw = passwordEncoder(client.getPassword());
+    Client new_client = new Client(client.getUsername(), pw, client.getType(), client.getName(), client.getSurname(), client.getEmail(), client.getPhone());
     if (!agreement.isEmpty()) {
       new_client.setAgreement(agreement.getOriginalFilename());
     }
@@ -64,6 +67,10 @@ public class ClientController {
       fileStorageService.store(agreement, new_client.getId().toString());
     }
     return "redirect:/";
+  }
+
+  private String passwordEncoder(String password) {
+    return new BCryptPasswordEncoder().encode(password);
   }
 
   @GetMapping("/client/{id}/agreement")

@@ -21,12 +21,17 @@ public class Client implements UserDetails {
   private Integer id;
 
   @Column(nullable = false, unique = true)
+  @NotBlank(message = "Laukelis negali būti tuščias.")
+  @Size(min = 3, max = 20, message = "Naudotojo vardas turi būti sudarytas iš bent 3 simbolių, bet nedaugiau, kaip 20.")
   private String username;
 
   @Column(nullable = false)
+  @NotBlank(message = "Laukelis negali būti tuščias.")
+  @Size(min = 6, max = 128, message = "Slaptažodis turi būti sudarytas iš bent 6 simbolių, bet nedaugiau, kaip 128.")
   private String password;
 
   @Column(nullable = false)
+  @NotBlank(message = "Laukelis negali būti tuščias.")
   private String type = "client";
 
   @Column(nullable = false)
@@ -135,6 +140,10 @@ public class Client implements UserDetails {
 
   public void setAgreement(String agreement) {
     this.agreement = agreement;
+  }
+
+  public String getType() {
+    return type;
   }
 
   @Override
